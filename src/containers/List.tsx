@@ -1,26 +1,29 @@
 import React from 'react'
-import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native'
-
-export default function List({ items, onPressItem }) {
+import { Dimensions, FlatList, StyleSheet,Image } from 'react-native'
+import { imageData } from '../api/Network'
+export default function List({ items,numColumns,onEndReached }) {
+  const {width} = Dimensions.get('screen')
+  const size = width / numColumns
   return (
     <FlatList
       data={items}
       keyExtractor={(item) => item.id}
-      renderItem={({ item, index }) => (
-        <TouchableOpacity
-          style={[styles.item, { backgroundColor: itemColor(index) }]}
-          onPress={() => onPressItem(item.id)}
-        >
-          <Text style={styles.title}>{item.title}</Text>
-        </TouchableOpacity>
+      numColumns={numColumns}
+      onEndReached={onEndReached}
+      renderItem={({ item }) => (
+      <Image
+      source = {{
+       height: size,
+       width: size,
+      uri: imageData(item.id,size,size)
+      }}
+      />
       )}
     />
   )
 }
 
-function itemColor(index) {
-  return `rgba(59, 108, 212, ${Math.max(1 - index / 10, 0.4)})`
-}
+
 
 const styles = StyleSheet.create({
   item: {
